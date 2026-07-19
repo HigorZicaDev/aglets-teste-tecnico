@@ -18,60 +18,17 @@ class ProductController extends Controller
 
     public function __construct(
         private readonly ProductService $service
-    ) {
-    }
+    ) {}
 
     public function index(Request $request): JsonResponse
     {
-        $products = Product::query()
+        $filters = $request->only(['search', 'price_min', 'price_max', 'stock_min', 'stock_max']);
 
-            // Busca por nome
-            ->when($request->filled('search'), function ($query) use ($request) {
-                $query->where(
-                    'name',
-                    'ilike',
-                    '%' . $request->input('search') . '%'
-                );
-            })
-
-            // Preço mínimo
-            ->when($request->filled('price_min'), function ($query) use ($request) {
-                $query->where(
-                    'price',
-                    '>=',
-                    $request->input('price_min')
-                );
-            })
-
-            // Preço máximo
-            ->when($request->filled('price_max'), function ($query) use ($request) {
-                $query->where(
-                    'price',
-                    '<=',
-                    $request->input('price_max')
-                );
-            })
-
-            // Estoque mínimo
-            ->when($request->filled('stock_min'), function ($query) use ($request) {
-                $query->where(
-                    'quantity_in_stock',
-                    '>=',
-                    $request->input('stock_min')
-                );
-            })
-
-            // Estoque máximo
-            ->when($request->filled('stock_max'), function ($query) use ($request) {
-                $query->where(
-                    'quantity_in_stock',
-                    '<=',
-                    $request->input('stock_max')
-                );
-            })
-
-            ->latest()
-            ->paginate($request->integer('per_page', 15));
+        $products = $this->service->list(
+            $filters,
+            $request->integer('per_page', 15),
+            $request->integer('page', 1)
+        );
 
         return $this->success([
             'items' => ProductResource::collection($products),
@@ -88,10 +45,10 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
 
-        if (!$product) {
+        if (! $product) {
             return $this->error(
                 'Produto não encontrado.',
-                404
+                status: 404
             );
         }
 
@@ -112,7 +69,7 @@ class ProductController extends Controller
         );
     }
 
-    public function update( UpdateProductRequest $request, Product $product): JsonResponse 
+    public function update(UpdateProductRequest $request, Product $product): JsonResponse
     {
         $product = $this->service->update($product, $request->validated());
 

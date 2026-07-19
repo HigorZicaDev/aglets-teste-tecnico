@@ -1,0 +1,145 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-07-19T00:00:00.000Z",
+  "__export_source": "manual.export:v1",
+  "resources": [
+    {
+      "_id": "wrk_products_api",
+      "_type": "workspace",
+      "parentId": null,
+      "name": "Aglets - API de Produtos",
+      "description": "Collection da API REST de gerenciamento de produtos (teste tecnico).",
+      "scope": "collection"
+    },
+    {
+      "_id": "env_base",
+      "_type": "environment",
+      "parentId": "wrk_products_api",
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://127.0.0.1:8000/api/v1"
+      },
+      "dataPropertyOrder": {
+        "&": ["base_url"]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1
+    },
+    {
+      "_id": "fld_products",
+      "_type": "request_group",
+      "parentId": "wrk_products_api",
+      "name": "Products",
+      "description": "Endpoints de CRUD de produtos",
+      "metaSortKey": 1
+    },
+    {
+      "_id": "req_list_products",
+      "_type": "request",
+      "parentId": "fld_products",
+      "name": "List products",
+      "description": "Lista produtos sem filtros, com paginacao padrao (per_page=15, page=1).",
+      "method": "GET",
+      "url": "{{ _.base_url }}/products",
+      "parameters": [],
+      "headers": [
+        { "name": "Accept", "value": "application/json" }
+      ],
+      "body": {},
+      "metaSortKey": 1
+    },
+    {
+      "_id": "req_list_products_filtered",
+      "_type": "request",
+      "parentId": "fld_products",
+      "name": "List products (filtered)",
+      "description": "Exemplo de filtros combinaveis: nome, faixa de preco, faixa de estoque e paginacao.",
+      "method": "GET",
+      "url": "{{ _.base_url }}/products",
+      "parameters": [
+        { "name": "search", "value": "teclado", "disabled": false },
+        { "name": "price_min", "value": "100", "disabled": false },
+        { "name": "price_max", "value": "500", "disabled": false },
+        { "name": "stock_min", "value": "0", "disabled": true },
+        { "name": "stock_max", "value": "100", "disabled": true },
+        { "name": "per_page", "value": "10", "disabled": false },
+        { "name": "page", "value": "1", "disabled": false }
+      ],
+      "headers": [
+        { "name": "Accept", "value": "application/json" }
+      ],
+      "body": {},
+      "metaSortKey": 2
+    },
+    {
+      "_id": "req_show_product",
+      "_type": "request",
+      "parentId": "fld_products",
+      "name": "Show product",
+      "description": "Consulta um produto especifico pelo id.",
+      "method": "GET",
+      "url": "{{ _.base_url }}/products/1",
+      "parameters": [],
+      "headers": [
+        { "name": "Accept", "value": "application/json" }
+      ],
+      "body": {},
+      "metaSortKey": 3
+    },
+    {
+      "_id": "req_create_product",
+      "_type": "request",
+      "parentId": "fld_products",
+      "name": "Create product",
+      "description": "Cria um novo produto.",
+      "method": "POST",
+      "url": "{{ _.base_url }}/products",
+      "parameters": [],
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Teclado Mecanico\",\n  \"description\": \"Teclado mecanico RGB\",\n  \"price\": 299.90,\n  \"quantity_in_stock\": 10\n}"
+      },
+      "metaSortKey": 4
+    },
+    {
+      "_id": "req_update_product",
+      "_type": "request",
+      "parentId": "fld_products",
+      "name": "Update product",
+      "description": "Atualiza um produto existente.",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/products/1",
+      "parameters": [],
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Teclado Mecanico RGB\",\n  \"description\": \"Teclado mecanico RGB, switches azuis\",\n  \"price\": 279.90,\n  \"quantity_in_stock\": 8\n}"
+      },
+      "metaSortKey": 5
+    },
+    {
+      "_id": "req_delete_product",
+      "_type": "request",
+      "parentId": "fld_products",
+      "name": "Delete product",
+      "description": "Remove um produto pelo id.",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/products/1",
+      "parameters": [],
+      "headers": [
+        { "name": "Accept", "value": "application/json" }
+      ],
+      "body": {},
+      "metaSortKey": 6
+    }
+  ]
+}
