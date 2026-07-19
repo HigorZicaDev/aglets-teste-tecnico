@@ -10,4 +10,16 @@ class ProductService
     {
         return Product::create($data);
     }
+
+    public function update( Product $product, array $data): Product 
+    {
+        $product->update($data);
+
+        return $product->refresh();
+    }
+
+    public function delete(Product $product): void 
+    {
+        $product->delete();
+    }
 }

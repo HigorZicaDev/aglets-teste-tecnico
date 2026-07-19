@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use App\Services\ProductService;
@@ -83,8 +84,17 @@ class ProductController extends Controller
         ], 'Produtos listados com sucesso.');
     }
 
-    public function show(Product $product): JsonResponse
+    public function show(int $id): JsonResponse
     {
+        $product = Product::find($id);
+
+        if (!$product) {
+            return $this->error(
+                'Produto não encontrado.',
+                404
+            );
+        }
+
         return $this->success(
             new ProductResource($product),
             'Produto encontrado com sucesso.'
@@ -102,4 +112,20 @@ class ProductController extends Controller
         );
     }
 
+    public function update( UpdateProductRequest $request, Product $product): JsonResponse 
+    {
+        $product = $this->service->update($product, $request->validated());
+
+        return $this->success(
+            new ProductResource($product),
+            'Produto atualizado com sucesso.'
+        );
+    }
+
+    public function destroy(Product $product): JsonResponse
+    {
+        $this->service->delete($product);
+
+        return $this->success(null, 'Produto excluído com sucesso.');
+    }
 }
