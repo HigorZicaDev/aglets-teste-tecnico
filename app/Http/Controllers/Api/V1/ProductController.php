@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
+use App\Services\ProductService;
 use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -12,6 +14,11 @@ use Illuminate\Http\Request;
 class ProductController extends Controller
 {
     use ApiResponse;
+
+    public function __construct(
+        private readonly ProductService $service
+    ) {
+    }
 
     public function index(Request $request): JsonResponse
     {
@@ -47,7 +54,7 @@ class ProductController extends Controller
             // Estoque mínimo
             ->when($request->filled('stock_min'), function ($query) use ($request) {
                 $query->where(
-                    'stock',
+                    'quantity_in_stock',
                     '>=',
                     $request->input('stock_min')
                 );
@@ -56,7 +63,7 @@ class ProductController extends Controller
             // Estoque máximo
             ->when($request->filled('stock_max'), function ($query) use ($request) {
                 $query->where(
-                    'stock',
+                    'quantity_in_stock',
                     '<=',
                     $request->input('stock_max')
                 );
@@ -75,4 +82,24 @@ class ProductController extends Controller
             ],
         ], 'Produtos listados com sucesso.');
     }
+
+    public function show(Product $product): JsonResponse
+    {
+        return $this->success(
+            new ProductResource($product),
+            'Produto encontrado com sucesso.'
+        );
+    }
+
+    public function store(StoreProductRequest $request): JsonResponse
+    {
+        $product = $this->service->create($request->validated());
+
+        return $this->success(
+            new ProductResource($product),
+            'Produto criado com sucesso.',
+            201
+        );
+    }
+
 }
