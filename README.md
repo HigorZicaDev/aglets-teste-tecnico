@@ -2,7 +2,7 @@
 
 API REST em Laravel para cadastro, consulta, atualização e remoção de produtos, com filtros combináveis, paginação, cache na listagem e testes automatizados.
 
-Projeto desenvolvido como teste técnico (vaga Desenvolvedor Fullstack — Aglets). Ver enunciado completo em [`instructions.md`](./instructions.md) e as respostas das perguntas teóricas em [`respostas.md`](./respostas.md).
+Projeto desenvolvido como teste técnico (vaga Desenvolvedor Fullstack — Aglets). Ver as respostas das perguntas teóricas em [`respostas.md`](./respostas.md).
 
 ## Stack
 
